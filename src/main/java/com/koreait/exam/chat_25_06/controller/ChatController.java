@@ -5,15 +5,22 @@ import com.koreait.exam.chat_25_06.RsData;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
 @RequestMapping("/chat")
 public class ChatController {
 
-    ChatMessage chatMessage = new ChatMessage("dd", "ss");
+    List<ChatMessage> chatMessages =  new ArrayList<>();
+
+    public record writeMessageResponse(long id) { }
 
     @PostMapping("/writeMessage")
     @ResponseBody
-    public RsData<ChatMessage> writeMessage() {
-        return new  RsData<>("S_1", "메세지 작성", chatMessage);
+    public RsData<writeMessageResponse> writeMessage() {
+        ChatMessage chatMessage = new ChatMessage("홍길동", "안녕");
+        chatMessages.add(chatMessage);
+        return new RsData<>("S_1", "메세지 작성", new writeMessageResponse(chatMessage.getId()));
     }
 }
