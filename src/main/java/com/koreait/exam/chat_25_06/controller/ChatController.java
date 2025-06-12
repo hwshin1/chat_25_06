@@ -26,9 +26,12 @@ public class ChatController {
         return new RsData<>("S_1", "메세지 작성", new writeChatMessageResponse(chatMessage.getId(), chatMessage.getAuthorName(), chatMessage.getContent()));
     }
 
+    public record messagesResponse(List<ChatMessage> chatMessages, long count) {}
+
     @GetMapping("/messages")
     @ResponseBody
-    public RsData<List<ChatMessage>> showMessages() {
-        return new RsData<>("S_1", "성공", chatMessages);
+    public RsData<messagesResponse> showMessages() {
+        return new RsData<>("S_1", "성공",
+                new messagesResponse(chatMessages, chatMessages.size()));
     }
 }
