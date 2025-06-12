@@ -23,4 +23,10 @@ public class ChatController {
         chatMessages.add(chatMessage);
         return new RsData<>("S_1", "메세지 작성", new writeMessageResponse(chatMessage.getId()));
     }
+
+    @GetMapping("/messages")
+    @ResponseBody
+    public RsData<List<ChatMessage>> showMessages() {
+        return new RsData<>("S_1", "성공", chatMessages);
+    }
 }
