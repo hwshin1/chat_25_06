@@ -9,16 +9,22 @@
 </head>
 <body>
 <div class="chat">
-    <form action="https://www.naver.com" onSubmit="Chat_submitWriteMessageForm(this); return false;">
+    <form action="https://localhost:8080" onSubmit="Chat_submitWriteMessageForm(this); return false;">
         <input name="authorName" type="text" placeholder="작성자">
         <input name="content" type="text" placeholder="내용">
         <input type="submit" value="작성">
     </form>
+
+    <div class="chat_messagebox">
+        <ul class="chat_message-ul"></ul>
+    </div>
+
+    <button onclick="Chat_loadMore();">불러오기</button>
 </div>
 </body>
 </html>
 
-<!-- Ajax 유틸 -->
+<!-- fetchPost, fetchGet -->
 <script>
     function fetchPost(url, data) {
         return fetch(url, {
@@ -74,5 +80,39 @@
         form.content.focus();
 
         // POST http://localhost:8080/chat/writeMessage
+    }
+</script>
+
+<script>
+    let Chat_lastLoadedId = 0;
+
+    function Chat_loadMore() {
+        fetchGet("/chat/messages", {
+            fromId : Chat_lastLoadedId
+        }).then(body => {
+            console.log("body : " + body);
+            console.log("body.data : " + body.data);
+            console.log("body.data.chatMessages : " + body.data.chatMessages);
+
+            Chat_drawMessages(body.data.chatMessages);
+        })
+    }
+
+    const Chat_elMessageUl = document.querySelector('.chat_message-ul');
+
+    function Chat_drawMessages(messages) {
+        if (messages.length == 0) return;
+
+        // 가져온 메세지를 그리기 전에 Chat__lastLoadedId 변수의 값을 갱신Add commentMore actions
+        Chat_lastLoadedId = messages[messages.length - 1].id;
+        console.log(Chat_lastLoadedId);
+
+        messages.forEach((message) => {
+            Chat_elMessageUl
+                .insertAdjacentHTML(
+                    "afterbegin",
+                    `<li>${message.authorName} : ${message.content}</li>`
+                )
+        })
     }
 </script>
