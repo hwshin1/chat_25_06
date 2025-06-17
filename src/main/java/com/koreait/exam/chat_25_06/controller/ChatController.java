@@ -21,6 +21,11 @@ public class ChatController {
 
     public record writeChatMessageRequest(String authorName, String content) {}
 
+    @GetMapping("/room")
+    public String showRoom(){
+        return "chat/room";
+    }
+
     @PostMapping("/writeMessage")
     @ResponseBody
     public RsData<writeChatMessageResponse> writeMessage(@RequestBody writeChatMessageRequest req) {
